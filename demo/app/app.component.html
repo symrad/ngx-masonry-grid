@@ -1,0 +1,9 @@
+<!--The content below is only a placeholder and can be replaced.-->
+
+<ngx-masonry-grid [model]="listMasonry" [queries]="queries">
+  <ng-template #masonryitem let-src="src" let-state="$$state" ><img [@test]="state" [src]="src"/></ng-template>
+</ngx-masonry-grid>
+<button (click)="aggiungi()">aggiungi</button>
+<button (click)="appendi()">appendi</button>
+<button (click)="modifica()">modifica</button>
+<button (click)="rimuovi()">rimuovi</button>

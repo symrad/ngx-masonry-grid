@@ -4,14 +4,18 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "build": "ng build",
     "test": "ng test",
     "lint": "ng lint",
-    "e2e": "ng e2e"
+    "e2e": "ng e2e",
+    "transpile": "ngc",
+    "package": "rollup -c",
+    "minify": "uglifyjs dist/bundles/ngxmasonrygrid.umd.js --screw-ie8 --compress --mangle --comments --output dist/bundles/ngxmasonrygrid.umd.min.js",
+    "build": "ng build ngx-masonry-grid --prod && cp dist/index.html index.html"
   },
   "private": true,
   "dependencies": {
     "@angular/animations": "^6.0.3",
+    "@angular/cdk":"^6.0.3",
     "@angular/common": "^6.0.3",
     "@angular/compiler": "^6.0.3",
     "@angular/core": "^6.0.3",
@@ -42,6 +46,8 @@
     "karma-jasmine": "~1.1.1",
     "karma-jasmine-html-reporter": "^0.2.2",
     "protractor": "~5.3.0",
+    "rollup-plugin-commonjs": "^8.2.6",
+    "rollup-plugin-node-resolve": "^3.0.0",
     "ts-node": "~5.0.1",
     "tslint": "~5.9.1"
   }
