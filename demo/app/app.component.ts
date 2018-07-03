@@ -1,3 +1,4 @@
+import { Path } from './services/path';
 import { Component, Inject } from '@angular/core';
 import { Breakpoints } from '@angular/cdk/layout';
 import { APP_BASE_HREF, LocationChangeListener, LocationStrategy, PathLocationStrategy } from '@angular/common';
@@ -13,7 +14,7 @@ import {
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css'],
-  providers: [{provide: LocationStrategy, useClass: PathLocationStrategy}],
+  providers: [],
   animations: [
     trigger('test', [
       state('inactive', style({
@@ -38,44 +39,44 @@ import {
 export class AppComponent {
   title = 'app';
   listMasonry = [
-    {src:`${this.location.getBaseHref()}/assets/1.jpg`},
-    {src:`${this.location.getBaseHref()}/assets/2.jpg`},
-    {src:`${this.location.getBaseHref()}/assets/3.jpg`},
-    {src:`${this.location.getBaseHref()}/assets/4.jpg`},
-    {src:`${this.location.getBaseHref()}/assets/5.jpg`},
-    {src:`${this.location.getBaseHref()}/assets/6.jpg`},
-    {src:`${this.location.getBaseHref()}/assets/7.jpg`},
-    {src:`${this.location.getBaseHref()}/assets/8.jpg`},
-    {src:`${this.location.getBaseHref()}/assets/9.jpg`},
-    {src:`${this.location.getBaseHref()}/assets/10.jpg`},
-    {src:`${this.location.getBaseHref()}/assets/11.jpg`}
+    {src:`${this.path.getPath()}/assets/1.jpg`},
+    {src:`${this.path.getPath()}/assets/2.jpg`},
+    {src:`${this.path.getPath()}/assets/3.jpg`},
+    {src:`${this.path.getPath()}/assets/4.jpg`},
+    {src:`${this.path.getPath()}/assets/5.jpg`},
+    {src:`${this.path.getPath()}/assets/6.jpg`},
+    {src:`${this.path.getPath()}/assets/7.jpg`},
+    {src:`${this.path.getPath()}/assets/8.jpg`},
+    {src:`${this.path.getPath()}/assets/9.jpg`},
+    {src:`${this.path.getPath()}/assets/10.jpg`},
+    {src:`${this.path.getPath()}/assets/11.jpg`}
   ];
   queries = [{query:Breakpoints.Small, columns:2},{query:Breakpoints.Medium, columns:3},{query:Breakpoints.Large, columns:4}];
-  obj =  {src:`${this.location.getBaseHref()}/assets/3.jpg`};
+  obj =  {src:`${this.path.getPath()}/assets/3.jpg`};
   test = '';
 
-  constructor(public location: LocationStrategy){
+  constructor(public path: Path){
 
   }
   
   aggiungi(){
     this.listMasonry.push(
-      {src:`${this.location.getBaseHref()}/assets/1.jpg`},
-    {src:`${this.location.getBaseHref()}/assets/2.jpg`},
+      {src:`${this.path.getPath()}/assets/1.jpg`},
+    {src:`${this.path.getPath()}/assets/2.jpg`},
       this.obj
     );
   }
 
   appendi(){
     this.listMasonry.unshift(
-      {src:`${this.location.getBaseHref()}/assets/7.jpg`},
-      {src:`${this.location.getBaseHref()}/assets/8.jpg`},
-      {src:`${this.location.getBaseHref()}/assets/9.jpg`}
+      {src:`${this.path.getPath()}/assets/7.jpg`},
+      {src:`${this.path.getPath()}/assets/8.jpg`},
+      {src:`${this.path.getPath()}/assets/9.jpg`}
     );
   }
 
   modifica(){
-    this.obj.src = `${this.location.getBaseHref()}/assets/11.jpg`;
+    this.obj.src = `${this.path.getPath()}/assets/11.jpg`;
   }
 
   rimuovi(){
