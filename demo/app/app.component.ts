@@ -26,12 +26,12 @@ import {
         transform: 'translateX(0)'
       })),
       transition('void => *', [
-        style({transform: 'translateX(-100%)'}),
-        animate(1000)
+        style({transform: 'translateY(-50%)'}),
+        animate(500)
       ]),
       transition('* => void', [
-        style({transform: 'translateX(100%)'}),
-        animate(1000)
+        style({transform: 'translateY(50%)'}),
+        animate(500)
       ])
     ])
   ]
