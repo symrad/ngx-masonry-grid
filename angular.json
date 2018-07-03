@@ -122,6 +122,45 @@
           }
         }
       }
+    },
+    "local": {
+      "root": "",
+      "sourceRoot": "demo",
+      "projectType": "application",
+      "prefix": "app",
+      "schematics": {},
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:browser",
+          "options": {
+            "outputPath": "demo",
+            "index": "demo/index.html",
+            "main": "demo/main.ts",
+            "polyfills": "demo/polyfills.ts",
+            "deployUrl": "/ngx-masonry-grid",
+            "tsConfig": "demo/tsconfig.app.json",
+            "assets": [
+              "demo/favicon.ico",
+              "demo/assets"
+            ],
+            "styles": [
+              "demo/styles.css"
+            ],
+            "scripts": []
+          }
+        },
+        "serve": {
+          "builder": "@angular-devkit/build-angular:dev-server",
+          "options": {
+            "browserTarget": "local:build"
+          },
+          "configurations": {
+            "production": {
+              "browserTarget": "local:build:production"
+            }
+          }
+        }
+      }
     }
   },
   "defaultProject": "ngx-masonry-grid"
