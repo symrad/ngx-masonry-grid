@@ -1,12 +1,9 @@
-import { element } from 'protractor';
-import { Component, ViewContainerRef, ComponentFactoryResolver, NgZone, VERSION, ViewChild, Input, ElementRef, OnInit, EmbeddedViewRef, ComponentRef, OnChanges, SimpleChanges, ContentChild, TemplateRef, IterableDiffers, DoCheck, IterableChanges, IterableChangeRecord, DefaultIterableDiffer, OnDestroy } from '@angular/core';
+import { Component, ViewContainerRef, ComponentFactoryResolver, ViewChild, Input, ElementRef, OnInit, EmbeddedViewRef, ComponentRef, OnChanges, SimpleChanges, ContentChild, TemplateRef, IterableDiffers, DoCheck, IterableChangeRecord, DefaultIterableDiffer } from '@angular/core';
 import { MasonryGridColumnComponent } from './masonryGridColumn.component';
 import {
     BreakpointObserver,
-    Breakpoints,
     BreakpointState
   } from '@angular/cdk/layout';
-import { TemplateParseResult } from '@angular/compiler';
 import { AnimationBuilder, style, animate, AnimationFactory, AnimationPlayer } from '@angular/animations';
 
 @Component({
@@ -36,7 +33,6 @@ export class MasonryGridComponent implements OnInit, OnChanges, DoCheck {
     public instanceItems:Array<EmbeddedViewRef<any>> = [];
     private _differModel;
     private _ordinatedModel = [];
-    private _isFirstChangeMediaQuery = true;
     private _nativeElement = {};
 
     @Input()

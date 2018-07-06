@@ -215,6 +215,46 @@
           }
         }
       }
+    },
+    "ngxmasonrygrid": {
+      "root": "projects/ngxmasonrygrid",
+      "sourceRoot": "projects/ngxmasonrygrid/src",
+      "projectType": "library",
+      "prefix": "lib",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-ng-packagr:build",
+          "options": {
+            "tsConfig": "projects/ngxmasonrygrid/tsconfig.lib.json",
+            "project": "projects/ngxmasonrygrid/ng-package.json"
+          },
+          "configurations": {
+            "production": {
+              "project": "projects/ngxmasonrygrid/ng-package.prod.json"
+            }
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "projects/ngxmasonrygrid/src/test.ts",
+            "tsConfig": "projects/ngxmasonrygrid/tsconfig.spec.json",
+            "karmaConfig": "projects/ngxmasonrygrid/karma.conf.js"
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "projects/ngxmasonrygrid/tsconfig.lib.json",
+              "projects/ngxmasonrygrid/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**"
+            ]
+          }
+        }
+      }
     }
   },
   "defaultProject": "ngx-masonry-grid"

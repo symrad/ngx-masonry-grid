@@ -15,6 +15,16 @@
     "lib": [
       "es2017",
       "dom"
-    ]
+    ],
+    "paths": {
+      "ngxmasonrygrid": [
+        "dist/ngxmasonrygrid",
+        "dist/ngxmasonrygrid"
+      ],
+      "ngxmasonrygrid/*": [
+        "dist/ngxmasonrygrid/*",
+        "dist/ngxmasonrygrid/*"
+      ]
+    }
   }
 }

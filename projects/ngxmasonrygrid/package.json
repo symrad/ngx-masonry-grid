@@ -1,0 +1,26 @@
+{
+  "name": "ngx-masonry-grid",
+  "version": "0.0.1",
+  "description": "",
+  "main": "bundles/ngxmasonrygrid.umd.js",
+  "module": "index.js",
+  "typings": "index.d.ts",
+  "keywords": [
+    "angular",
+    "angular 6"
+  ],
+  "author": "Simone Radice",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/symrad/ngx-masonry-grid.git"
+  },
+  "homepage": "https://github.com/symrad/ngx-masonry-grid",
+  "bugs": {
+    "url": "https://github.com/symrad/ngx-masonry-grid/issues"
+  },
+  "peerDependencies": {
+    "@angular/common": "^6.0.0-rc.0 || ^6.0.0",
+    "@angular/core": "^6.0.0-rc.0 || ^6.0.0"
+  }
+}
