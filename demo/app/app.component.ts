@@ -7,7 +7,9 @@ import {
   state,
   style,
   animate,
-  transition
+  transition,
+  query,
+  animateChild
 } from '@angular/animations';
 
 @Component({
@@ -16,7 +18,9 @@ import {
   styleUrls: ['./app.component.css'],
   providers: [],
   animations: [
-    trigger('test', [
+    
+    //trigger('test', [
+      /*
       state('inactive', style({
         backgroundColor: '#eee',
         transform: 'translateX(0)'
@@ -25,16 +29,30 @@ import {
         backgroundColor: 'white',
         transform: 'translateX(0)'
       })),
-      transition('void => *', [
+      */
+     
+      /*
+      transition(':enter', [
         style({transform: 'translateY(-50%)'}),
+        query('img', animateChild()),
         animate(500)
       ]),
+      
+      transition(':leave', [
+        style({transform: 'translateX(100%)'}),
+        query('img', animateChild()),
+        animate(500)
+      ])
+      */
+      
+
+      /*
       transition('* => void', [
         style({transform: 'translateY(50%)'}),
         animate(500)
       ])
-    ])
-  ]
+      */
+    ]
 })
 export class AppComponent {
   title = 'app';
@@ -80,6 +98,7 @@ export class AppComponent {
   }
 
   rimuovi(){
-    this.listMasonry.shift();
+    this.listMasonry.pop();
+    this.listMasonry.splice(3,1);
   }
 }
