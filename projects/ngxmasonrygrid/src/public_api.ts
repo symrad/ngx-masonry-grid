@@ -2,6 +2,6 @@
  * Public API Surface of ngxmasonrygrid
  */
 
-export * from './lib/ngxmasonrygrid.service';
-export * from './lib/ngxmasonrygrid.component';
-export * from './lib/ngxmasonrygrid.module';
+export * from './lib/masonryGrid.module';
+export * from './lib/masonryGrid.component';
+export * from './lib/masonryGridColumn.component';
