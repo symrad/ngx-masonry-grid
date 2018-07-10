@@ -137,7 +137,7 @@
             "index": "demo/index.html",
             "main": "demo/main.ts",
             "polyfills": "demo/polyfills.ts",
-            "deployUrl": "/ngx-masonry-grid/",
+            "deployUrl": "/ngx-masonry-grid/dist/",
             "tsConfig": "demo/tsconfig.app.json",
             "assets": [
               "demo/favicon.ico",
