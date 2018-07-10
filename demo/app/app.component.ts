@@ -19,7 +19,17 @@ import {
   providers: [],
   animations: [
     
-    //trigger('test', [
+    trigger('flyInOut', [
+      transition(':enter', [
+        style({transform: 'translateX(-100%)'}),
+        animate(500, style({transform: 'translateX(0)'}))
+      ]),
+      transition(':leave', [
+        //style({transform: 'translateX(0)'}),
+        animate(500, style({opacity: '0'}))
+      ])
+    ])
+    
       /*
       state('inactive', style({
         backgroundColor: '#eee',
@@ -42,8 +52,15 @@ import {
         style({transform: 'translateX(100%)'}),
         query('img', animateChild()),
         animate(500)
-      ])
+      ]),
       */
+/*
+      transition(':enter', [
+        style({ opacity: '0' }),
+        animate('.5s ease-out', style({ opacity: '1' })),
+      ]),
+  */    
+      
       
 
       /*
@@ -51,8 +68,10 @@ import {
         style({transform: 'translateY(50%)'}),
         animate(500)
       ])
+    
       */
-    ]
+    
+  ]
 })
 export class AppComponent {
   title = 'app';
@@ -69,7 +88,7 @@ export class AppComponent {
     {src:`${this.path.getPath()}/assets/10.jpg`},
     {src:`${this.path.getPath()}/assets/11.jpg`}
   ];
-  queries = [{query:Breakpoints.Small, columns:2},{query:Breakpoints.Medium, columns:3},{query:Breakpoints.Large, columns:4}];
+  queries = [{query:Breakpoints.XSmall, columns:1},{query:Breakpoints.Small, columns:2},{query:Breakpoints.Medium, columns:3},{query:Breakpoints.Large, columns:4},{query:Breakpoints.XLarge, columns:5}];
   obj =  {src:`${this.path.getPath()}/assets/3.jpg`};
   test = '';
 
@@ -80,8 +99,7 @@ export class AppComponent {
   aggiungi(){
     this.listMasonry.push(
       {src:`${this.path.getPath()}/assets/1.jpg`},
-    {src:`${this.path.getPath()}/assets/2.jpg`},
-      this.obj
+      {src:`${this.path.getPath()}/assets/2.jpg`}
     );
   }
 
@@ -99,6 +117,12 @@ export class AppComponent {
 
   rimuovi(){
     this.listMasonry.pop();
-    this.listMasonry.splice(3,1);
+    //this.listMasonry.splice(3,1);
+  }
+
+  muovi(){
+    var modelToMove = this.listMasonry[0];
+    this.listMasonry.splice(0, 1);
+    this.listMasonry.splice(this.listMasonry.length, 0, modelToMove);
   }
 }

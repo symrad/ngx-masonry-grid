@@ -4,11 +4,13 @@ import { MasonryGridComponent } from "./masonryGrid.component";
 import { MasonryGridColumnComponent } from "./masonryGridColumn.component";
 import { LayoutModule } from '@angular/cdk/layout';
 import { HttpClientModule } from '@angular/common/http';
+import { MasonryGridItemDirective } from "projects/ngxmasonrygrid/src/lib/masonryGridItem.directive";
 
 @NgModule({
     declarations: [
         MasonryGridComponent,
-        MasonryGridColumnComponent
+        MasonryGridColumnComponent,
+        MasonryGridItemDirective
     ],
     imports: [
         CommonModule,
@@ -16,7 +18,9 @@ import { HttpClientModule } from '@angular/common/http';
         HttpClientModule
     ],
     exports: [
-        MasonryGridComponent
+        MasonryGridComponent,
+        MasonryGridColumnComponent,
+        MasonryGridItemDirective
     ],
     entryComponents:[MasonryGridColumnComponent]
 })

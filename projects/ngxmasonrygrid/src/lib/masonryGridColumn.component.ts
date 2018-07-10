@@ -3,7 +3,7 @@ import { transition, style, query, animateChild, animate, trigger, stagger } fro
 
 @Component({
   selector: 'div[ngx-masonry-grid].ngx-masonry-grid',
-  template: `<ng-container #content [@queryAnimation]="contentColumn.length"></ng-container>`,
+  template: `<ng-container #content ></ng-container>`,
   styles:[
       `
       :host{
@@ -15,7 +15,6 @@ import { transition, style, query, animateChild, animate, trigger, stagger } fro
 export class MasonryGridColumnComponent {
     @Input('data') data:any;
     @ViewChild('content',{read:ViewContainerRef}) contentColumn:ViewContainerRef;
-    queryAnimation = '';
     constructor(
       public el: ElementRef
     ) {}

@@ -1,10 +1,13 @@
+import { MasonryGridItemDirective } from './masonryGridItem.directive';
 import { Component, ViewContainerRef, ComponentFactoryResolver, ViewChild, Input, ElementRef, OnInit, EmbeddedViewRef, ComponentRef, OnChanges, SimpleChanges, ContentChild, TemplateRef, IterableDiffers, DoCheck, IterableChangeRecord, DefaultIterableDiffer } from '@angular/core';
 import { MasonryGridColumnComponent } from './masonryGridColumn.component';
 import {
     BreakpointObserver,
     BreakpointState
   } from '@angular/cdk/layout';
-import { AnimationBuilder, style, animate, AnimationFactory, AnimationPlayer } from '@angular/animations';
+import { AnimationBuilder, style, animate, AnimationFactory, AnimationPlayer, trigger, transition, query, animateChild } from '@angular/animations';
+import { Observable, Observer, Subject, pipe } from 'rxjs';
+import { flatMap, share, publish, concatMap, delay, tap, debounce, debounceTime } from 'rxjs/operators';
 
 @Component({
   selector: 'ngx-masonry-grid',
@@ -24,7 +27,7 @@ import { AnimationBuilder, style, animate, AnimationFactory, AnimationPlayer } f
 export class MasonryGridComponent implements OnInit, OnChanges, DoCheck {
 
     @ViewChild('columns', {read:ViewContainerRef}) columns:ViewContainerRef;
-    @ContentChild('masonryitem', {read:TemplateRef}) masonryItem:TemplateRef<any>;
+    @ContentChild(MasonryGridItemDirective) masonryItem:MasonryGridItemDirective;
 
     @Input('model') model;
 
@@ -37,6 +40,10 @@ export class MasonryGridComponent implements OnInit, OnChanges, DoCheck {
 
     @Input()
     public queries:Array<{query:any,columns:number}> = [];
+
+    public recalculatePosition$S:Subject<any>;
+    public recalculatePosition$O:Observable<any>;
+    public execution:number = 0;
 
     factoryAnimEnter:AnimationFactory;
     playerAnimEnter:AnimationPlayer;
@@ -51,25 +58,20 @@ export class MasonryGridComponent implements OnInit, OnChanges, DoCheck {
         public _animationBuilder: AnimationBuilder,
         public element:ElementRef
     ) {
-        this.factoryAnimEnter = this._animationBuilder.build([
-            style({transform: 'translateY(-50%)'}),
-            animate(500)
-          ]);
-
-        this.factoryAnimLeave = this._animationBuilder.build([
-            style({transform: 'translateX(0)'}),
-            animate(500,style({transform: 'translateX(100%)'}))
-        ]);
+        this.recalculatePosition$S = new Subject();
+        this.recalculatePosition$O = this.recalculatePosition$S.pipe(concatMap(()=>this.recalculatePosition()), share());
     }
 
     ngOnInit() {
+        let firstIteration = true;
+        this.recalculatePosition$O.subscribe((response)=>{})
         for(let query of this.queries){
             this.breakpointObserver
             .observe([query.query])
             .subscribe((state: BreakpointState) => {
               if (state.matches) {
                 this.numberColumns = query.columns;
-                this.recalculatePosition(this.instanceItems);
+                this.recalculatePosition$S.next(this.execution++);
               }
             });
         }
@@ -77,6 +79,7 @@ export class MasonryGridComponent implements OnInit, OnChanges, DoCheck {
 
     ngDoCheck() {
         const changes:DefaultIterableDiffer<any> = this._differModel.diff(this.model);
+        let recalculate = false;
         if (changes) {
             changes.forEachOperation(
                 (item: IterableChangeRecord<any>, adjustedPreviousIndex: number, currentIndex: number) => {
@@ -84,38 +87,22 @@ export class MasonryGridComponent implements OnInit, OnChanges, DoCheck {
                     if (item.previousIndex == null) {
                         //add
                         var column = (item.currentIndex % this.numberColumns) | 0;
-                        let embeddedView = this.masonryItem.createEmbeddedView(item.item);
-                        
+                        let newItem = item.item;
+                    
+                        let embeddedView = this.masonryItem._template.createEmbeddedView(newItem);
                         this.instanceItems.splice(item.currentIndex, 0, embeddedView);
-                        this._ordinatedModel.splice(item.currentIndex, 0, item.item);
-                       
-                        var positionIntoColumn = Math.floor(item.currentIndex/this.numberColumns);
-                        let viewRef = this.instanceColumns[column].instance.contentColumn.insert(embeddedView,positionIntoColumn);
-
-                        this.recalculatePositionNativeElement();
-                        let nativeElement = this._nativeElement[column][positionIntoColumn];
-                        
-                        this.playerAnimEnter = this.factoryAnimEnter.create(nativeElement, {});
-                        this.playerAnimEnter.play();
-                        this.recalculatePosition(this.instanceItems);
-
+                        this._ordinatedModel.splice(item.currentIndex, 0, newItem);
+                                          
                     } else if (currentIndex == null) {
                         //remove
+                        var column = (adjustedPreviousIndex % this.numberColumns) | 0;
+                        let indexToRemove = this.instanceColumns[column].instance.contentColumn.indexOf(this.instanceItems[adjustedPreviousIndex]);
                         
-                            var column = (adjustedPreviousIndex % this.numberColumns) | 0;
-                            let indexToRemove = this.instanceColumns[column].instance.contentColumn.indexOf(this.instanceItems[adjustedPreviousIndex]);
-                            
-                            let nativeElement = this._nativeElement[column][indexToRemove];
-                            this.playerAnimLeave = this.factoryAnimLeave.create(nativeElement, {});
-                            this.playerAnimLeave.play();
-                            
-                            this.instanceColumns[column].instance.contentColumn.remove(indexToRemove); 
-                            this.instanceItems.splice(adjustedPreviousIndex, 1);  
-                            this._ordinatedModel.splice(adjustedPreviousIndex, 1);
-                            this.recalculatePositionNativeElement();
-
-                            this.recalculatePosition(this.instanceItems);
-                            
+                        this.instanceColumns[column].instance.contentColumn.remove(indexToRemove); 
+                        this.instanceItems.splice(adjustedPreviousIndex, 1);  
+                        this._ordinatedModel.splice(adjustedPreviousIndex, 1);   
+                        this.recalculatePosition$S.next(this.execution++);
+                        
                     } else {
                         //move
                         var modelToMove = this._ordinatedModel[adjustedPreviousIndex];
@@ -125,9 +112,11 @@ export class MasonryGridComponent implements OnInit, OnChanges, DoCheck {
                         var instanceItemsToMove = this.instanceItems[adjustedPreviousIndex];
                         this.instanceItems.splice(adjustedPreviousIndex, 1);
                         this.instanceItems.splice(currentIndex, 0, instanceItemsToMove);
-                        this.recalculatePosition(this.instanceItems);
+                        
                     }
-                    });
+            });
+            this.recalculatePosition$S.next(this.execution++);
+            
         }
     }
 
@@ -152,55 +141,69 @@ export class MasonryGridComponent implements OnInit, OnChanges, DoCheck {
         }
     }
 
-    recalculatePosition(embeddedViews){
-
-        let columnToAdd = this.numberColumns - this.columns.length;
-        var prevNumColumn = this.columns.length;
-        var postNumColumn;
-        if(columnToAdd>0){
-            this.createColumns(columnToAdd);
-            postNumColumn = this.columns.length;
-        }else{
-            postNumColumn = this.columns.length + columnToAdd;
-        }
-        
-
-        for(let i in embeddedViews){
-            var oldValColumn = (parseInt(i) % prevNumColumn) | 0;
-            var newValColumn = (parseInt(i) % postNumColumn) | 0;
-            var positionIntoColumn = Math.floor(parseInt(i)/postNumColumn);
-            let index = this.instanceColumns[oldValColumn].instance.contentColumn.indexOf(embeddedViews[i]);
-            if(index > -1 && positionIntoColumn === index && oldValColumn === newValColumn){
-                //è già nella posizione giusta
-                continue;
+    recalculatePosition(){
+        return Observable.create((observer:Observer<any>)=>{
+            let embeddedViews = this.instanceItems;
+            let columnToAdd = this.numberColumns - this.instanceColumns.length;
+            var postNumColumn;
+            if(columnToAdd<-1){
+                //potrebbe fare casino non ne capisco il motivo
+                console.log(columnToAdd);
+                //observer.next(this.instanceColumns);
+                //observer.complete();
+                //return;
             }
-               
-            if(index > -1){
-                this.instanceColumns[oldValColumn].instance.contentColumn.detach(index);
+            if(columnToAdd>0){
+                this.createColumns(columnToAdd);
+                postNumColumn = this.instanceColumns.length;
+            }else{
+                postNumColumn = this.instanceColumns.length + columnToAdd;
+            }
+            
+            for(let i in embeddedViews){
+                var oldValColumn = -1;
+                var newValColumn = (parseInt(i) % postNumColumn) | 0;
+                var positionIntoColumn = Math.floor(parseInt(i)/postNumColumn);
+                let index = -1;
+                for(let l in this.instanceColumns){
+                    index = this.instanceColumns[l].instance.contentColumn.indexOf(embeddedViews[i]);
+                    oldValColumn = parseInt(l);
+                    if(index > -1){
+                        break;
+                    }
+                }
+                
+                if(index > -1 && positionIntoColumn === index && oldValColumn === newValColumn){
+                    //è già nella posizione giusta
+                    continue;
+                }
+
+                if(index > -1 && oldValColumn === newValColumn){
+                    this.instanceColumns[newValColumn].instance.contentColumn.move(embeddedViews[i],positionIntoColumn);
+                    continue;
+                }
+                
+                if(index > -1){
+                    this.instanceColumns[oldValColumn].instance.contentColumn.detach(index);
+                    this.instanceColumns[newValColumn].instance.contentColumn.insert(embeddedViews[i],positionIntoColumn);
+                    continue;
+                }
+                    
                 this.instanceColumns[newValColumn].instance.contentColumn.insert(embeddedViews[i],positionIntoColumn);
-                continue;
+                    
             }
-                
-            this.instanceColumns[newValColumn].instance.contentColumn.insert(embeddedViews[i],positionIntoColumn);
-                
-        }
 
-        let columnToRemove = this.numberColumns - this.columns.length;
+            let columnToRemove = this.numberColumns - this.instanceColumns.length;
 
-        if(columnToRemove < 0){
-            this.instanceColumns.splice(this.columns.length-1, Math.abs(columnToRemove));
-            for(let l=this.columns.length; l > this.numberColumns; l-- ){
-                this.columns.remove(l);
+            if(columnToRemove < 0){
+                this.instanceColumns.splice(this.columns.length+columnToRemove, Math.abs(columnToRemove));
+                
+                for(let l=this.columns.length-1; l >= this.numberColumns; l-- ){
+                    this.columns.remove(l);
+                }
             }
-        }
-    }
-
-    recalculatePositionNativeElement(){
-        var columnElement = this.element.nativeElement.getElementsByClassName('ngx-masonry-grid');
-
-        for(let l=0; l<columnElement.length;l++){
-            this.element.nativeElement
-            this._nativeElement[l] = columnElement[l].getElementsByClassName('itemElement');
-        }
+            observer.next(this.instanceColumns);
+            observer.complete();
+        }); 
     }
 }
