@@ -1,9 +1,8 @@
 import { HttpClientModule } from '@angular/common/http';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-
+import { MasonryGridModule } from 'ngx-masonry-grid';
 import { AppComponent } from './app.component';
-import { MasonryGridModule } from 'src/masonryGrid.module';
 import { CardComponent } from './test.component';
 import { CommonModule, LocationStrategy, PathLocationStrategy } from '@angular/common';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
