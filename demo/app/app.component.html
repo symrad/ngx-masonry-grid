@@ -1,11 +1,11 @@
 <!--The content below is only a placeholder and can be replaced.-->
 
-<ngx-masonry-grid [model]="listMasonry" [queries]="queries">
-  <ng-template #masonryitem let-src="src" let-state="$$state" >
-    <div class="itemElement">
-      <img [src]="src"/>
-    </div>
-  </ng-template>
+<ngx-masonry-grid [model]="listMasonry" [queries]="queries" >
+  <ng-container *mgItem="let src = src;let state=$$state" >
+      <div class="itemElement" [@flyInOut] >
+        <img [src]="src"/>
+      </div>
+  </ng-container>
 </ngx-masonry-grid>
 <button (click)="aggiungi()">aggiungi</button>
 <button (click)="appendi()">appendi</button>
