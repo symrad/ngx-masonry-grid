@@ -4,7 +4,7 @@ import { MasonryGridComponent } from "./masonryGrid.component";
 import { MasonryGridColumnComponent } from "./masonryGridColumn.component";
 import { LayoutModule } from '@angular/cdk/layout';
 import { HttpClientModule } from '@angular/common/http';
-import { MasonryGridItemDirective } from "projects/ngxmasonrygrid/src/lib/masonryGridItem.directive";
+import { MasonryGridItemDirective } from './masonryGridItem.directive';
 
 @NgModule({
     declarations: [
