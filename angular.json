@@ -13,11 +13,11 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "dist",
+            "outputPath": "",
             "index": "demo/index.html",
             "main": "demo/main.ts",
             "polyfills": "demo/polyfills.ts",
-            "deployUrl": "/ngx-masonry-grid/dist/",
+            "deployUrl": "/ngx-masonry-grid/",
             "tsConfig": "demo/tsconfig.app.json",
             "assets": [
               "demo/favicon.ico",
@@ -51,11 +51,11 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "ngx-masonry-grid:build"
+            "browserTarget": "local:build"
           },
           "configurations": {
             "production": {
-              "browserTarget": "ngx-masonry-grid:build:production"
+              "browserTarget": "local:build:production"
             }
           }
         },
