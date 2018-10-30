@@ -17,13 +17,11 @@
       "dom"
     ],
     "paths": {
-      "ngxmasonrygrid": [
-        "dist/ngxmasonrygrid",
-        "dist/ngxmasonrygrid"
+      "ngx-masonry-grid": [
+        "dist/ngx-masonry-grid"
       ],
-      "ngxmasonrygrid/*": [
-        "dist/ngxmasonrygrid/*",
-        "dist/ngxmasonrygrid/*"
+      "ngx-masonry-grid/*": [
+        "dist/ngx-masonry-grid/*"
       ]
     }
   }

@@ -1,0 +1,95 @@
+{
+  "configVersion": 1,
+  "index": "/ngx-masonry-grid/index.html",
+  "assetGroups": [
+    {
+      "name": "app",
+      "installMode": "prefetch",
+      "updateMode": "prefetch",
+      "urls": [
+        "/ngx-masonry-grid/favicon.ico",
+        "/ngx-masonry-grid/index.html",
+        "/ngx-masonry-grid/main.b02bff7411c2672c04df.js",
+        "/ngx-masonry-grid/polyfills.87a952d045552aaddb46.js",
+        "/ngx-masonry-grid/runtime.ec2944dd8b20ec099bf3.js",
+        "/ngx-masonry-grid/styles.3bb2a9d4949b7dc120a9.css"
+      ],
+      "patterns": []
+    },
+    {
+      "name": "assets",
+      "installMode": "lazy",
+      "updateMode": "prefetch",
+      "urls": [
+        "/ngx-masonry-grid/assets/1.jpg",
+        "/ngx-masonry-grid/assets/10.jpg",
+        "/ngx-masonry-grid/assets/11.jpg",
+        "/ngx-masonry-grid/assets/12.jpg",
+        "/ngx-masonry-grid/assets/2.jpg",
+        "/ngx-masonry-grid/assets/3.jpg",
+        "/ngx-masonry-grid/assets/4.jpg",
+        "/ngx-masonry-grid/assets/5.jpg",
+        "/ngx-masonry-grid/assets/6.jpg",
+        "/ngx-masonry-grid/assets/7.jpg",
+        "/ngx-masonry-grid/assets/8.jpg",
+        "/ngx-masonry-grid/assets/9.jpg",
+        "/ngx-masonry-grid/assets/icons/icon-128x128.png",
+        "/ngx-masonry-grid/assets/icons/icon-144x144.png",
+        "/ngx-masonry-grid/assets/icons/icon-152x152.png",
+        "/ngx-masonry-grid/assets/icons/icon-192x192.png",
+        "/ngx-masonry-grid/assets/icons/icon-384x384.png",
+        "/ngx-masonry-grid/assets/icons/icon-512x512.png",
+        "/ngx-masonry-grid/assets/icons/icon-72x72.png",
+        "/ngx-masonry-grid/assets/icons/icon-96x96.png"
+      ],
+      "patterns": []
+    }
+  ],
+  "dataGroups": [],
+  "hashTable": {
+    "/ngx-masonry-grid/assets/1.jpg": "864b42a185771b58c13874827983457d770bc342",
+    "/ngx-masonry-grid/assets/10.jpg": "25ad460360447efa774f93efe6fde59072a5c5b8",
+    "/ngx-masonry-grid/assets/11.jpg": "512657aeb66447d35422cde0144f0b4aba8c814c",
+    "/ngx-masonry-grid/assets/12.jpg": "270ac87fba1b7f886f80594419368e1579aff6f7",
+    "/ngx-masonry-grid/assets/2.jpg": "db3cb5a7bfceebe4c4adbd817745dfefe15aa772",
+    "/ngx-masonry-grid/assets/3.jpg": "187a74f59376d2883aa79a1b96e18c43215922d3",
+    "/ngx-masonry-grid/assets/4.jpg": "d7958515e4745d8327866c693ee2a1cede21f710",
+    "/ngx-masonry-grid/assets/5.jpg": "583c0a6fec604496960f9357723326350544c6d5",
+    "/ngx-masonry-grid/assets/6.jpg": "bdeec73ddc7c7379c622351770832dcd6bbae334",
+    "/ngx-masonry-grid/assets/7.jpg": "5621fe8cdc450ec2fadc488675edf65f57777cb8",
+    "/ngx-masonry-grid/assets/8.jpg": "a83f503fd96944ffc2e2fe52fb9c634025f95d89",
+    "/ngx-masonry-grid/assets/9.jpg": "b950904b9afb3c994735b4c709629e219cd1ddad",
+    "/ngx-masonry-grid/assets/icons/icon-128x128.png": "dae3b6ed49bdaf4327b92531d4b5b4a5d30c7532",
+    "/ngx-masonry-grid/assets/icons/icon-144x144.png": "b0bd89982e08f9bd2b642928f5391915b74799a7",
+    "/ngx-masonry-grid/assets/icons/icon-152x152.png": "7479a9477815dfd9668d60f8b3b2fba709b91310",
+    "/ngx-masonry-grid/assets/icons/icon-192x192.png": "1abd80d431a237a853ce38147d8c63752f10933b",
+    "/ngx-masonry-grid/assets/icons/icon-384x384.png": "329749cd6393768d3131ed6304c136b1ca05f2fd",
+    "/ngx-masonry-grid/assets/icons/icon-512x512.png": "559d9c4318b45a1f2b10596bbb4c960fe521dbcc",
+    "/ngx-masonry-grid/assets/icons/icon-72x72.png": "c457e56089a36952cd67156f9996bc4ce54a5ed9",
+    "/ngx-masonry-grid/assets/icons/icon-96x96.png": "3914125a4b445bf111c5627875fc190f560daa41",
+    "/ngx-masonry-grid/favicon.ico": "84161b857f5c547e3699ddfbffc6d8d737542e01",
+    "/ngx-masonry-grid/index.html": "3e11af2758303c59b10aa1bae8615797dc435900",
+    "/ngx-masonry-grid/main.b02bff7411c2672c04df.js": "15895cea519e02a6bd1914ce66466b36e88af900",
+    "/ngx-masonry-grid/polyfills.87a952d045552aaddb46.js": "a759a8b731e05517b0e600ffdc5f01379ad0a058",
+    "/ngx-masonry-grid/runtime.ec2944dd8b20ec099bf3.js": "b62956c2192bfe5516d6374e753773901ed50ec5",
+    "/ngx-masonry-grid/styles.3bb2a9d4949b7dc120a9.css": "da39a3ee5e6b4b0d3255bfef95601890afd80709"
+  },
+  "navigationUrls": [
+    {
+      "positive": true,
+      "regex": "^\\/.*$"
+    },
+    {
+      "positive": false,
+      "regex": "^\\/(?:.+\\/)?[^/]*\\.[^/]*$"
+    },
+    {
+      "positive": false,
+      "regex": "^\\/(?:.+\\/)?[^/]*__[^/]*$"
+    },
+    {
+      "positive": false,
+      "regex": "^\\/(?:.+\\/)?[^/]*__[^/]*\\/.*$"
+    }
+  ]
+}
