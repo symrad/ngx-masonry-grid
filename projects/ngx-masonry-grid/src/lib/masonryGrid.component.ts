@@ -41,10 +41,7 @@ import { Renderer2 } from '@angular/core';
 
   // tslint:disable-next-line:component-selector
   selector: 'ngx-masonry-grid',
-  template: `
-    <ng-container #columns>
-    </ng-container>
-  `,
+  template: `<ng-container #columns></ng-container>`,
   styles: [
       `
       :host{
@@ -60,11 +57,11 @@ import { Renderer2 } from '@angular/core';
   ]
 })
 
-export class MasonryGridComponent implements OnInit, OnChanges, DoCheck {
+export class MasonryGridComponent implements OnInit {
 
     @ViewChild('columns', {read: ViewContainerRef}) columns: ViewContainerRef;
-    @ContentChild(MasonryGridItemDirective) masonryItem: MasonryGridItemDirective;
-    @Input() model;
+    @ViewChild(MasonryGridItemDirective) masonryItem: MasonryGridItemDirective;
+    // @Input() model;
 
     public numberColumns = 0;
     public instanceColumns: Array<ComponentRef<MasonryGridColumnComponent>> = [];
@@ -120,6 +117,7 @@ export class MasonryGridComponent implements OnInit, OnChanges, DoCheck {
         }
     }
 
+    /*
     ngDoCheck() {
         const changes: DefaultIterableDiffer<any> = this._differModel.diff(this.model);
         if (changes) {
@@ -158,7 +156,9 @@ export class MasonryGridComponent implements OnInit, OnChanges, DoCheck {
             this.recalculatePosition$S.next(this.execution++);
         }
     }
+    */
 
+    /*
     ngOnChanges(changes: SimpleChanges): void {
         if ('model' in changes) {
             const value = changes['model'].currentValue;
@@ -167,6 +167,7 @@ export class MasonryGridComponent implements OnInit, OnChanges, DoCheck {
             }
         }
     }
+    */
 
     createColumn() {
         const component = this.componentFactoryResolver.resolveComponentFactory(MasonryGridColumnComponent);
