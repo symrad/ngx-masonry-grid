@@ -25,7 +25,8 @@
     "@angular/service-worker": "^7.0.1",
     "core-js": "^2.5.7",
     "rxjs": "^6.3.3",
-    "zone.js": "^0.8.26"
+    "zone.js": "^0.8.26",
+    "bowser": "2.0.0-beta.3"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "~0.10.3",

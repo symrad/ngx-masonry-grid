@@ -16,6 +16,11 @@ import {
     SimpleChanges,
     ViewContainerRef,
     ViewChild,
+    TemplateRef,
+    HostBinding,
+    ContentChildren,
+    ViewChildren,
+    HostListener,
 } from '@angular/core';
 import { MasonryGridColumnComponent } from './masonryGridColumn.component';
 import {
@@ -29,8 +34,11 @@ import {
 } from '@angular/animations';
 import { Observable, Observer, Subject, pipe, ConnectableObservable } from 'rxjs';
 import { publish, concatMap } from 'rxjs/operators';
+import { NgForOfContext, NgForOf } from '@angular/common';
+import { Renderer2 } from '@angular/core';
 
 @Component({
+
   // tslint:disable-next-line:component-selector
   selector: 'ngx-masonry-grid',
   template: `
@@ -40,7 +48,13 @@ import { publish, concatMap } from 'rxjs/operators';
   styles: [
       `
       :host{
-        display:flex;
+          display:flex;
+      }
+      :host.gridSystem{
+        display: grid;
+        grid-gap: 0px;
+        grid-template-columns: repeat(auto-fill, minmax(250px,1fr));
+        grid-auto-rows: 1px;
       }
     `
   ]
@@ -50,7 +64,6 @@ export class MasonryGridComponent implements OnInit, OnChanges, DoCheck {
 
     @ViewChild('columns', {read: ViewContainerRef}) columns: ViewContainerRef;
     @ContentChild(MasonryGridItemDirective) masonryItem: MasonryGridItemDirective;
-
     @Input() model;
 
     public numberColumns = 0;
@@ -61,6 +74,11 @@ export class MasonryGridComponent implements OnInit, OnChanges, DoCheck {
 
     @Input()
     public queries: Array<{query: any, columns: number}> = [];
+
+    @Input()
+    public isPolyfill: Boolean = false;
+
+    @HostBinding('class.gridSystem') gridSystemClass: Boolean;
 
     public recalculatePosition$S: Subject<any>;
     public recalculatePosition$O: ConnectableObservable<any>;
@@ -77,7 +95,8 @@ export class MasonryGridComponent implements OnInit, OnChanges, DoCheck {
         public breakpointObserver: BreakpointObserver,
         public _differs: IterableDiffers,
         public _animationBuilder: AnimationBuilder,
-        public element: ElementRef
+        public element: ElementRef,
+        public _renderer: Renderer2
     ) {
         this.recalculatePosition$S = new Subject();
         this.recalculatePosition$O = this.recalculatePosition$S.pipe(
@@ -85,6 +104,7 @@ export class MasonryGridComponent implements OnInit, OnChanges, DoCheck {
     }
 
     ngOnInit() {
+        this.gridSystemClass = !this.isPolyfill;
         for (const query of this.queries) {
             this.breakpointObserver
             .observe([query.query])
@@ -113,10 +133,14 @@ export class MasonryGridComponent implements OnInit, OnChanges, DoCheck {
                         this._ordinatedModel.splice(item.currentIndex, 0, newItem);
                     } else if (currentIndex == null) {
                         // remove
-                        const column = (adjustedPreviousIndex % this.numberColumns) || 0;
-                        const indexToRemove = this.instanceColumns[column].instance.contentColumn.indexOf(
-                            this.instanceItems[adjustedPreviousIndex]);
-                        this.instanceColumns[column].instance.contentColumn.remove(indexToRemove);
+                        if (this.isPolyfill) {
+                            const column = (adjustedPreviousIndex % this.numberColumns) || 0;
+                            const indexToRemove = this.instanceColumns[column].instance.contentColumn.indexOf(
+                                this.instanceItems[adjustedPreviousIndex]);
+                            this.instanceColumns[column].instance.contentColumn.remove(indexToRemove);
+                        } else {
+                            this.columns.remove(adjustedPreviousIndex);
+                        }
                         this.instanceItems.splice(adjustedPreviousIndex, 1);
                         this._ordinatedModel.splice(adjustedPreviousIndex, 1);
                         this.recalculatePosition$S.next(this.execution++);
@@ -157,79 +181,148 @@ export class MasonryGridComponent implements OnInit, OnChanges, DoCheck {
     }
 
     recalculatePosition() {
-        return Observable.create((observer: Observer<any>) => {
-            const embeddedViews = this.instanceItems;
-            const columnToAdd = this.numberColumns - this.instanceColumns.length;
-            let postNumColumn;
-            if (columnToAdd < -1 ) {
-                // potrebbe fare casino non ne capisco il motivo
-                console.log(columnToAdd);
-                // observer.next(this.instanceColumns);
-                // observer.complete();
-                // return;
-            }
-            if (columnToAdd > 0) {
-                this.createColumns(columnToAdd);
-                postNumColumn = this.instanceColumns.length;
-            } else {
-                postNumColumn = this.instanceColumns.length + columnToAdd;
-            }
+        if (this.isPolyfill) {
+            return Observable.create((observer: Observer<any>) => {
+                const embeddedViews = this.instanceItems;
+                const columnToAdd = this.numberColumns - this.instanceColumns.length;
+                let postNumColumn;
+                if (columnToAdd < -1 ) {
+                    // potrebbe fare casino non ne capisco il motivo
+                    console.log(columnToAdd);
+                    // observer.next(this.instanceColumns);
+                    // observer.complete();
+                    // return;
+                }
+                if (columnToAdd > 0) {
+                    this.createColumns(columnToAdd);
+                    postNumColumn = this.instanceColumns.length;
+                } else {
+                    postNumColumn = this.instanceColumns.length + columnToAdd;
+                }
 
-            // tslint:disable-next-line:forin
-            for (const i in embeddedViews) {
-                let oldValColumn = -1;
-                const newValColumn = (parseInt(i, 10) % postNumColumn) || 0;
-                const positionIntoColumn = Math.floor(parseInt(i, 10) / postNumColumn);
-                let index = -1;
                 // tslint:disable-next-line:forin
-                for (const l in this.instanceColumns) {
-                    index = this.instanceColumns[l].instance.contentColumn.indexOf(embeddedViews[i]);
-                    oldValColumn = parseInt(l, 10);
+                for (const i in embeddedViews) {
+                    let oldValColumn = -1;
+                    const newValColumn = (parseInt(i, 10) % postNumColumn) || 0;
+                    const positionIntoColumn = Math.floor(parseInt(i, 10) / postNumColumn);
+                    let index = -1;
+                    // tslint:disable-next-line:forin
+                    for (const l in this.instanceColumns) {
+                        index = this.instanceColumns[l].instance.contentColumn.indexOf(embeddedViews[i]);
+                        oldValColumn = parseInt(l, 10);
+                        if (index > -1) {
+                            break;
+                        }
+                    }
+
+                    if (index > -1 && positionIntoColumn === index && oldValColumn === newValColumn) {
+                        // è già nella posizione giusta
+                        continue;
+                    }
+
+                    if (index > -1 && oldValColumn === newValColumn) {
+                        this.instanceColumns[newValColumn].instance.contentColumn.move(embeddedViews[i], positionIntoColumn);
+                        continue;
+                    }
+
                     if (index > -1) {
-                        break;
+                        // in caso di problemi vedere https://github.com/angular/angular/issues/20824
+                        const viewToReattach: any = this.instanceColumns[oldValColumn].instance.contentColumn.detach(index);
+
+                        this.instanceColumns[newValColumn].instance.contentColumn.insert(viewToReattach, positionIntoColumn);
+                        // problemi con l'animazione, facendo il detach il fromState dell'animazione è a void
+                        // quando si rimuove un elemento il toState passa anche lui a void
+                        // questo significa che si avrà una transazione void <=> void
+                        // che soddisfa sia il :leave che :enter
+                        // viene quindi eseguito quello che viene definito per primo
+                        // vedere TransitionAnimationEngine.prototype._flushAnimations come viene popolato il queuedInstructions
+
+                        continue;
+                    }
+
+                    this.instanceColumns[newValColumn].instance.contentColumn.insert(embeddedViews[i], positionIntoColumn);
+
+                }
+
+                const columnToRemove = this.numberColumns - this.instanceColumns.length;
+
+                if (columnToRemove < 0) {
+                    this.instanceColumns.splice(this.columns.length + columnToRemove, Math.abs(columnToRemove));
+
+                    for (let l = this.columns.length - 1; l >= this.numberColumns; l-- ) {
+                        this.columns.remove(l);
                     }
                 }
+                observer.next(this.instanceColumns);
+                observer.complete();
+            });
+        } else {
+            return Observable.create((observer: Observer<any>) => {
+                const embeddedViews = this.instanceItems;
 
-                if (index > -1 && positionIntoColumn === index && oldValColumn === newValColumn) {
-                    // è già nella posizione giusta
-                    continue;
+                // tslint:disable-next-line:forin
+                for (const i in embeddedViews) {
+
+                    let index = -1;
+                    index = this.columns.indexOf(embeddedViews[i]);
+
+                    if (index > -1 && index === parseInt(i, 10)) {
+                        // è già nella posizione corretta
+                        continue;
+                    }
+
+                    if (index > -1) {
+                        this.columns.move(embeddedViews[i], parseInt(i, 10));
+                        continue;
+                    }
+
+                    this.columns.insert(embeddedViews[i], parseInt(i, 10));
+
                 }
-
-                if (index > -1 && oldValColumn === newValColumn) {
-                    this.instanceColumns[newValColumn].instance.contentColumn.move(embeddedViews[i], positionIntoColumn);
-                    continue;
-                }
-
-                if (index > -1) {
-                    // in caso di problemi vedere https://github.com/angular/angular/issues/20824
-                    const viewToReattach: any = this.instanceColumns[oldValColumn].instance.contentColumn.detach(index);
-
-                    this.instanceColumns[newValColumn].instance.contentColumn.insert(viewToReattach, positionIntoColumn);
-                    // problemi con l'animazione, facendo il detach il fromState dell'animazione è a void
-                    // quando si rimuove un elemento il toState passa anche lui a void
-                    // questo significa che si avrà una transazione void <=> void
-                    // che soddisfa sia il :leave che :enter
-                    // viene quindi eseguito quello che viene definito per primo
-                    // vedere TransitionAnimationEngine.prototype._flushAnimations come viene popolato il queuedInstructions
-
-                    continue;
-                }
-
-                this.instanceColumns[newValColumn].instance.contentColumn.insert(embeddedViews[i], positionIntoColumn);
-
-            }
-
-            const columnToRemove = this.numberColumns - this.instanceColumns.length;
-
-            if (columnToRemove < 0) {
-                this.instanceColumns.splice(this.columns.length + columnToRemove, Math.abs(columnToRemove));
-
-                for (let l = this.columns.length - 1; l >= this.numberColumns; l-- ) {
-                    this.columns.remove(l);
-                }
-            }
-            observer.next(this.instanceColumns);
-            observer.complete();
-        });
+                observer.next('');
+                observer.complete();
+            });
+        }
     }
+
+    @HostListener('window:resize', ['$event'])
+    onResize(ev: any) {
+        this.resizeAllGridItems();
+    }
+
+    @HostListener('window:load', ['$event'])
+    onLoad(ev: any) {
+        this.resizeAllGridItems();
+    }
+
+    resizeGridItem(item) {
+        const grid = document.getElementsByTagName('ngx-masonry-grid')[0];
+        const rowHeight = parseInt(window.getComputedStyle(grid).getPropertyValue('grid-auto-rows'), 10);
+        const rowGap = parseInt(window.getComputedStyle(grid).getPropertyValue('grid-row-gap'), 10);
+        const rowSpan = Math.ceil((item.querySelector('img').getBoundingClientRect().height + rowGap) / (rowHeight + rowGap));
+        item.style.gridRowEnd = 'span ' + rowSpan;
+        console.log(rowSpan);
+    }
+
+    resizeAllGridItems() {
+        const allItems = document.getElementsByClassName('itemElement');
+        for (let x = 0; x < allItems.length; x++) {
+          this.resizeGridItem(allItems[x]);
+        }
+    }
+
+    resizeInstance(instance) {
+        const item = instance.elements[0];
+        this.resizeGridItem(item);
+    }
+
+    /*
+      window.onload = resizeAllGridItems();
+      window.addEventListener("resize", resizeAllGridItems);
+
+      allItems = document.getElementsByClassName("item");
+      for(x=0;x<allItems.length;x++){
+        imagesLoaded( allItems[x], resizeInstance);
+      }
+      */
 }

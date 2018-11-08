@@ -3,13 +3,14 @@ import {
   ViewContainerRef,
   ViewChild,
   Input,
-  ElementRef
+  ElementRef,
+  ContentChildren
 } from '@angular/core';
 
 @Component({
   // tslint:disable-next-line:component-selector
-  selector: 'div[ngx-masonry-grid-column].ngx-masonry-grid-column',
-  template: `<ng-container #content ></ng-container>`,
+  selector: 'div[ngx-masonry-grid-item].ngx-masonry-grid-item',
+  template: `<div class="itemGrid" #content ></div>`,
   styles: [
       `
       :host{
@@ -18,9 +19,9 @@ import {
     `
   ]
 })
-export class MasonryGridColumnComponent {
+export class MasonryGridItemComponent {
     @Input() data: any;
-    @ViewChild('content', {read: ViewContainerRef}) contentColumn: ViewContainerRef;
+    @ViewChild('content', {read: ViewContainerRef}) contentItem: ViewContainerRef;
     constructor(
       public el: ElementRef
     ) {}
