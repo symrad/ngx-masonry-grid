@@ -1,10 +1,8 @@
 <!--The content below is only a placeholder and can be replaced.-->
 
-<ngx-masonry-grid [model]="listMasonry" [queries]="queries" [isPolyfill]="false">
-  <ng-container *mgFor="let test">
-      <div class="itemElement" [@flyInOut] >
-        <img [src]="test.src"/>
-      </div>
+<ngx-masonry-grid [queries]="queries" [isPolyfill]="false">
+  <ng-container *mgFor="let test of listMasonry" >
+      <img [src]="test.src" />
   </ng-container>
 </ngx-masonry-grid>
 <button (click)="aggiungi()">aggiungi</button>

@@ -26,7 +26,9 @@
     "core-js": "^2.5.7",
     "rxjs": "^6.3.3",
     "zone.js": "^0.8.26",
-    "bowser": "2.0.0-beta.3"
+    "bowser": "2.0.0-beta.3",
+    "imagesloaded": "^4.1.4",
+    "@types/imagesloaded": "^4.1.1"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "~0.10.3",
